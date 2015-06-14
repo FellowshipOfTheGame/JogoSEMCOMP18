@@ -12,6 +12,8 @@ public class Grid : MonoBehaviour {
 	public int linhas;
 	public int colunas;
 
+    public enum Direction { StraightRight, UpperRight, UpperLeft, StraightLeft, BottomLeft, BottomRight, NONE}
+
 	// Use this for initialization
 	void Start () {
 		float diameter = node.transform.localScale.x;
@@ -23,9 +25,16 @@ public class Grid : MonoBehaviour {
 
 		for (int i = 0; i < linhas; i++) {
 			for (int j = 0; j < colunas; j++) {
-				GameObject obj = (GameObject) Instantiate (node, new Vector3 ((j + i/2.0f) * diameter, i * 1.5f * side, -5) + basePosition, Quaternion.identity);
+				GameObject obj = (GameObject) Instantiate (node);
+                obj.transform.position = new Vector3((j + i / 2.0f) * diameter, i * 1.5f * side, node.transform.position.z) + basePosition;
+                obj.transform.rotation = Quaternion.identity;
 				obj.transform.parent = transform;
 				allNodes[(i * colunas) + j] = obj;
+                Node nodeScript = obj.GetComponent<Node>();
+                if (nodeScript != null) {
+                    nodeScript.x = j;
+                    nodeScript.y = i;
+                }
 			}
 		}
 	}
@@ -34,4 +43,27 @@ public class Grid : MonoBehaviour {
 	void Update () {
 	
 	}
+
+    public static bool AreNeighbors(Node n1, Node n2) {
+        return  ((n1.x + 1 == n2.x) && (n1.y == n2.y))     ||
+                ((n1.x + 1 == n2.x) && (n1.y - 1 == n2.y)) || 
+                ((n1.x == n2.x)     && (n1.y - 1 == n2.y)) || 
+                ((n1.x - 1 == n2.x) && (n1.y == n2.y))     || 
+                ((n1.x - 1 == n2.x) && (n1.y + 1 == n2.y)) || 
+                ((n1.x == n2.x)     && (n1.y + 1 == n2.y));
+    }
+
+    public static Direction GetDirection(Node from, Node to) {
+        if ((from.x + 1 == to.x) && (from.y == to.y)) { return Direction.StraightRight; }
+        else if ((from.x + 1 == to.x) && (from.y - 1 == to.y)) { return Direction.UpperRight; }
+        else if ((from.x == to.x) && (from.y - 1 == to.y)) { return Direction.UpperLeft; }
+        else if ((from.x - 1 == to.x) && (from.y == to.y)) { return Direction.StraightLeft; }
+        else if ((from.x - 1 == to.x) && (from.y + 1 == to.y)) { return Direction.BottomLeft; }
+        else if ((from.x == to.x) && (from.y + 1 == to.y)) { return Direction.BottomRight; }
+        else return Direction.NONE;
+    }
+
+    public static bool IsValidDirection(Direction dir) {
+        return dir != Direction.NONE;
+    }
 }
