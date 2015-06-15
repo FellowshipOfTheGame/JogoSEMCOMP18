@@ -1,15 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LED : MonoBehaviour {
+public class LED : Node {
 
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+
+    public override void RecieveEnergy(GameObject energy) {
+        energies.Add(energy);
+
+        if (energies.Count > 0) {
+            GameObject resultEnergy = Energy.JoinEnergies(energies);
+            Light(resultEnergy.GetComponent<Energy>().eColor);
+        }
+    }
+
+    public void Light(Energy.EColor ec) {
+
+    }
 }

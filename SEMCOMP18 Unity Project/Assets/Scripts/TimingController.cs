@@ -7,7 +7,7 @@ public class TimingController : MonoBehaviour {
 
     private float timer;
 
-    public int compassCounter; 
+    public int beatCounter; 
 
 	// Use this for initialization
 	void Start () {
@@ -15,11 +15,16 @@ public class TimingController : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-    void Update() {
+    void LateUpdate() {
         int beatsToRun;
         float delta = Time.deltaTime;
         timer += delta;
-        beatsToRun = (int)(timer * bpm/60);
-        timer = (timer * bpm / 60) - (int)(timer * bpm / 60);
+        beatsToRun = (int)(timer * bpm/60f);
+        timer = (timer * bpm / 60f) - (int)(timer * bpm / 60f);
+        beatCounter += beatsToRun;
+        while(beatsToRun > 0){
+            FindObjectOfType<Grid>().Beat();
+            beatsToRun--;
+        }
 	}
 }

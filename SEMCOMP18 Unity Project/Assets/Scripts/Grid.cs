@@ -4,8 +4,9 @@ using System;
 using System.Security.Cryptography;
 
 public class Grid : MonoBehaviour {
-	/// Prefab do Nó, a ser criado pela Grid
-	public GameObject node;
+    /// Prefab do Nó, a ser criado pela Grid
+    public GameObject nodePrefab;
+    public GameObject GeneratorPrefab;
 	/// Matriz de todos os nós
 	private GameObject[] allNodes;
 
@@ -16,7 +17,7 @@ public class Grid : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		float diameter = node.transform.localScale.x;
+		float diameter = nodePrefab.transform.localScale.x;
 		float radius = diameter / 2.0f;
 		float side = diameter / ((float)Math.Sqrt (3));
 		Vector3 basePosition = new Vector3 (colunas / (-2.0f) - radius, linhas / (-2.0f) + radius, 0);
@@ -25,8 +26,8 @@ public class Grid : MonoBehaviour {
 
 		for (int i = 0; i < linhas; i++) {
 			for (int j = 0; j < colunas; j++) {
-				GameObject obj = (GameObject) Instantiate (node);
-                obj.transform.position = new Vector3((j + i / 2.0f) * diameter, i * 1.5f * side, node.transform.position.z) + basePosition;
+				GameObject obj = (GameObject) Instantiate (nodePrefab);
+                obj.transform.position = new Vector3((j + i / 2.0f) * diameter, i * 1.5f * side, nodePrefab.transform.position.z) + basePosition;
                 obj.transform.rotation = Quaternion.identity;
 				obj.transform.parent = transform;
 				allNodes[(i * colunas) + j] = obj;
@@ -37,7 +38,24 @@ public class Grid : MonoBehaviour {
                 }
 			}
 		}
+        Destroy(allNodes[0]);
+        GameObject o = (GameObject)Instantiate(GeneratorPrefab);
+        o.transform.position = new Vector3(0, 0, GeneratorPrefab.transform.position.z) + basePosition;
+        o.transform.rotation = Quaternion.identity;
+		o.transform.parent = transform;
+        allNodes[0] = o;
+        Generator genScript = o.GetComponent<Generator>();
+        if (genScript != null) {
+            genScript.x = 0;
+            genScript.y = 0;
+        }
 	}
+
+    public void Beat() {
+        for (int i = 0; i < allNodes.Length; i++) {
+            allNodes[i].GetComponent<Node>().OnBeat();
+        }
+    }
 	
 	// Update is called once per frame
 	void Update () {

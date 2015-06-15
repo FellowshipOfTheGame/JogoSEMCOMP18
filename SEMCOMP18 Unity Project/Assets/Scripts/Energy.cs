@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Energy : MonoBehaviour {
 
@@ -34,7 +35,33 @@ public class Energy : MonoBehaviour {
         sprite = GetComponent<SpriteRenderer>();
     }
 
-	public static EColor Join(EColor a, EColor b){
+    public static GameObject JoinEnergies(List<GameObject> energies) {
+        GameObject result = null;
+        foreach (GameObject go in energies) {
+            Energy e = go.GetComponent<Energy>();
+            if (e != null) {
+                result = e.JoinEnergy(result);
+            }
+        }
+        return result;
+    }
+
+    public GameObject JoinEnergy(GameObject other) {
+        if (other != null) {
+            Energy otherEnergy = other.GetComponent<Energy>();
+            if (otherEnergy != null) {
+                this.JoinColor(otherEnergy);
+                Destroy(other);
+            }
+        }
+        return gameObject;
+    }
+
+    public void JoinColor(Energy otherEnergy) {
+        this.eColor = Sum(this.eColor, otherEnergy.eColor);
+    }
+
+	public static EColor Sum(EColor a, EColor b){
         int result = (int)a + (int)b;
         if (result > (int)EColor.WHITE){
             result = (int)EColor.WHITE;

@@ -3,15 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 
-public class Node : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
+public class Node : MonoBehaviour, IPointerUpHandler, IPointerDownHandler {
 
     public GameObject[] wires = new GameObject[6];
     public int x;
     public int y;
     public GameObject wirePrefab;
 
+    public List<GameObject> energies = new List<GameObject>();
 
     public void OnPointerDown(PointerEventData pointerEventData) {
+
     }
 
     public void OnPointerUp(PointerEventData pointerEventData) {
@@ -22,12 +24,11 @@ public class Node : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
             if (otherNode != null && otherNode != this) {
                 //otherObject is a Node too! And its not me!
                 if (IsNeighbor(otherNode)) {
-                    Debug.Log("Other node is my neighbor!");//other node is my neighbor!
+                    //other node is my neighbor!
                     Grid.Direction dir = DirectionTo(otherNode);
                     if (Grid.IsValidDirection(dir)) {
-                        Debug.Log("\tI have his direction!");
                         if (IsDirectionEmpty(dir)) {
-                            Debug.Log("\t\tThere wasn't a wire between us yet.");//There wasn't a wire between us yet.
+                            //There wasn't a wire between us yet.
                             Vector2 pontoMedio = (Vector2)(transform.position + otherObject.transform.position) / 2;
                             GameObject wire = (GameObject)Instantiate(wirePrefab);
                             wire.transform.position = new Vector3(pontoMedio.x, pontoMedio.y, wirePrefab.transform.position.z);
@@ -45,6 +46,34 @@ public class Node : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
             }
         }
     }
+
+    public virtual void OnBeat() {
+        Rout();
+    }
+
+    public void Rout() {
+        if (energies.Count > 0) {
+            GameObject resultEnergy = Energy.JoinEnergies(energies);
+            if (resultEnergy != null) {
+                for (int i = 0; i < 6; i++) {
+                    if (wires[i] != null) {
+                        Wire wire = wires[i].GetComponent<Wire>();
+                        if (wire.outNode != this) {
+                            wire.RecieveEnergy((GameObject)(Instantiate(resultEnergy)));
+                        }
+                    }
+                }
+                Destroy(resultEnergy);
+            }
+            energies.Clear();
+        }
+    }
+
+    public virtual void RecieveEnergy(GameObject energy) {
+        energies.Add(energy);
+        energy.transform.position = this.transform.position;
+    }
+
 
     public bool IsNeighbor(Node other) {
         return Grid.AreNeighbors(this, other);
@@ -69,5 +98,17 @@ public class Node : MonoBehaviour, IPointerDownHandler, IPointerUpHandler {
                 return;
             }
         }
+    }
+
+    public bool HaveOutput() {
+        for (int i = 0; i < 6; i++) {
+            if (wires[i] != null) {
+                Wire wire = wires[i].GetComponent<Wire>();
+                if (wire.outNode != this) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
