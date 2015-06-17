@@ -15,32 +15,21 @@ public class Energy : MonoBehaviour {
         WHITE
     }
 
-    private EColor ecolor;
+    public EColor eColor;
 
-    private SpriteRenderer sprite;
-    
-    public EColor eColor {
-        get {
-            return ecolor;
-        }
-        set {
-            ecolor = value;
-            if (sprite != null) {
-                sprite.color = ToColor(ecolor);
-            }
-        }
-    }
-    
-    void Start() {
-        sprite = GetComponent<SpriteRenderer>();
+    public void SetColor(EColor c){
+        eColor = c;
+        GetComponent<SpriteRenderer>().color = ToColor(c);
     }
 
     public static GameObject JoinEnergies(List<GameObject> energies) {
         GameObject result = null;
         foreach (GameObject go in energies) {
-            Energy e = go.GetComponent<Energy>();
-            if (e != null) {
-                result = e.JoinEnergy(result);
+            if(go != null){
+                Energy e = go.GetComponent<Energy>();
+                if (e != null) {
+                    result = e.JoinEnergy(result);
+                }
             }
         }
         return result;
@@ -58,7 +47,7 @@ public class Energy : MonoBehaviour {
     }
 
     public void JoinColor(Energy otherEnergy) {
-        this.eColor = Sum(this.eColor, otherEnergy.eColor);
+        this.SetColor(Sum(this.eColor, otherEnergy.eColor));
     }
 
 	public static EColor Sum(EColor a, EColor b){

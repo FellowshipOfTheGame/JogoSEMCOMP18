@@ -5,26 +5,27 @@ public class TimingController : MonoBehaviour {
 
     public int bpm = 120;
 
-    private float timer;
+    private float timer = 0;
 
-    public int beatCounter; 
+    public int beatCounter;
+
+    private float delta = 0;
+    private int beatsToRun = 0;
 
 	// Use this for initialization
-	void Start () {
-	
+    void Update() {
 	}
 	
 	// Update is called once per frame
     void LateUpdate() {
-        int beatsToRun;
-        float delta = Time.deltaTime;
+        delta = Time.deltaTime;
         timer += delta;
-        beatsToRun = (int)(timer * bpm/60f);
+        beatsToRun = (int)(timer * bpm / 60f);
         timer = (timer * bpm / 60f) - (int)(timer * bpm / 60f);
         beatCounter += beatsToRun;
-        while(beatsToRun > 0){
-            FindObjectOfType<Grid>().Beat();
-            beatsToRun--;
+        if(beatsToRun > 0){
+            FindObjectOfType<Grid>().Beat(beatCounter);
+            beatsToRun = 0;
         }
 	}
 }

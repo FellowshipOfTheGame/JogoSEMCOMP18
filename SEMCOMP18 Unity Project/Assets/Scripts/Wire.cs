@@ -10,6 +10,7 @@ public class Wire : MonoBehaviour, IPointerClickHandler {
 
     public Queue<GameObject> energyReferences = new Queue<GameObject>();
     public Queue<float> energyTimers = new Queue<float>();
+    public Queue<int> energyBeat = new Queue<int>();
 
     private TimingController timing;
 
@@ -44,12 +45,16 @@ public class Wire : MonoBehaviour, IPointerClickHandler {
         if(pointerEventData.button == PointerEventData.InputButton.Right){
             inNode.GetComponent<Node>().DeleteWire(gameObject);
             outNode.GetComponent<Node>().DeleteWire(gameObject);
+            while (energyReferences.Count > 0) {
+                Destroy(energyReferences.Dequeue());
+            }
             Destroy(this.gameObject);
         }
     }
 
-    public void RecieveEnergy(GameObject energy) {
+    public void RecieveEnergy(GameObject energy, int beatCounter) {
         energyReferences.Enqueue(energy);
         energyTimers.Enqueue(0f);
+        energyBeat.Enqueue(beatCounter);
     }
 }

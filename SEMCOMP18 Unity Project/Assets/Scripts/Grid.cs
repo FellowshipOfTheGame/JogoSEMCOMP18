@@ -51,9 +51,9 @@ public class Grid : MonoBehaviour {
         }
 	}
 
-    public void Beat() {
+    public void Beat(int beatCounter) {
         for (int i = 0; i < allNodes.Length; i++) {
-            allNodes[i].GetComponent<Node>().OnBeat();
+            allNodes[i].GetComponent<Node>().OnBeat(beatCounter);
         }
     }
 	

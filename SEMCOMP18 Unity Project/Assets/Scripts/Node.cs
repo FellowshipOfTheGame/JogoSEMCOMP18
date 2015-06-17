@@ -12,6 +12,8 @@ public class Node : MonoBehaviour, IPointerUpHandler, IPointerDownHandler {
 
     public List<GameObject> energies = new List<GameObject>();
 
+    public GameObject energyPrefab;
+
     public void OnPointerDown(PointerEventData pointerEventData) {
 
     }
@@ -47,11 +49,12 @@ public class Node : MonoBehaviour, IPointerUpHandler, IPointerDownHandler {
         }
     }
 
-    public virtual void OnBeat() {
-        Rout();
+    public virtual void OnBeat(int beatCounter) {
+        Rout(beatCounter);
     }
 
-    public void Rout() {
+    public void Rout(int beatCounter) {
+        Debug.Log("Node: " + x + ", " + y + ": Routing " + energies.Count + " energies.");
         if (energies.Count > 0) {
             GameObject resultEnergy = Energy.JoinEnergies(energies);
             if (resultEnergy != null) {
@@ -59,7 +62,10 @@ public class Node : MonoBehaviour, IPointerUpHandler, IPointerDownHandler {
                     if (wires[i] != null) {
                         Wire wire = wires[i].GetComponent<Wire>();
                         if (wire.outNode != this) {
-                            wire.RecieveEnergy((GameObject)(Instantiate(resultEnergy)));
+                            GameObject newObj = (GameObject)Instantiate(energyPrefab);
+                            Energy newEnergy = newObj.GetComponent<Energy>();
+                            newEnergy.JoinColor(resultEnergy.GetComponent<Energy>());
+                            wire.RecieveEnergy(newObj, beatCounter);
                         }
                     }
                 }
