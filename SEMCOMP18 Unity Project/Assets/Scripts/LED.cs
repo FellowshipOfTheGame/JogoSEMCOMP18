@@ -13,8 +13,7 @@ public class LED : Node {
         beat = 0;
     }
     public override void RecieveEnergy(GameObject energy) {
-        energies.Add(energy);
-
+        base.RecieveEnergy (energy);
         if (energies.Count > 0) {
             GameObject resultEnergy = Energy.JoinEnergies(energies);
             Light(resultEnergy.GetComponent<Energy>().eColor);
@@ -31,6 +30,9 @@ public class LED : Node {
         if (notes != null && notes.Length > 0)
         {
             beat = beatCounter % notes.Length;
+		}
+        if (energy != null) {
+            Light(energy.GetComponent<Energy> ().eColor);
         }
     }
 

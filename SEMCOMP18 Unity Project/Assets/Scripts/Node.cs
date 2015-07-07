@@ -10,9 +10,11 @@ public class Node : MonoBehaviour, IPointerUpHandler, IPointerDownHandler {
     public int y;
     public GameObject wirePrefab;
 
-    public List<GameObject> energies = new List<GameObject>();
+	// Qual energia ta no no atualmente
+    public GameObject energy = null;
 
     public GameObject energyPrefab;
+
 
     public void OnPointerDown(PointerEventData pointerEventData) {
 
@@ -54,30 +56,31 @@ public class Node : MonoBehaviour, IPointerUpHandler, IPointerDownHandler {
     }
 
     public void Rout(int beatCounter) {
-        Debug.Log("Node: " + x + ", " + y + ": Routing " + energies.Count + " energies.");
-        if (energies.Count > 0) {
-            GameObject resultEnergy = Energy.JoinEnergies(energies);
-            if (resultEnergy != null) {
-                for (int i = 0; i < 6; i++) {
-                    if (wires[i] != null) {
-                        Wire wire = wires[i].GetComponent<Wire>();
-                        if (wire.outNode != this) {
-                            GameObject newObj = (GameObject)Instantiate(energyPrefab);
-                            Energy newEnergy = newObj.GetComponent<Energy>();
-                            newEnergy.JoinColor(resultEnergy.GetComponent<Energy>());
-                            wire.RecieveEnergy(newObj, beatCounter);
-                        }
+        if (energy != null) {
+            for (int i = 0; i < 6; i++) {
+                if (wires[i] != null) {
+                    Wire wire = wires[i].GetComponent<Wire>();
+                    if (wire.outNode != gameObject) {
+                        GameObject newObj = (GameObject)Instantiate(energyPrefab, transform.position, Quaternion.identity);
+                        Energy newEnergy = newObj.GetComponent<Energy>();
+                        newEnergy.JoinColor(energy.GetComponent<Energy>());
+                        wire.RecieveEnergy(newObj);
                     }
                 }
-                Destroy(resultEnergy);
             }
-            energies.Clear();
+			Destroy (energy);
+			energy = null;
         }
     }
 
-    public virtual void RecieveEnergy(GameObject energy) {
-        energies.Add(energy);
-        energy.transform.position = this.transform.position;
+    public virtual void RecieveEnergy(GameObject new_energy) {
+		if (energy == null) {
+			energy = new_energy;
+		}
+		else {
+			energy.GetComponent<Energy> ().JoinEnergy (new_energy);
+		}
+        energy.transform.position = gameObject.transform.position;
     }
 
 

@@ -3,16 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class Energy : MonoBehaviour {
-
+	// Cores básicas são bits separados, pra podermos somar facilmente com um OR bit-a-bit
+	// As outras cores devem estar nessa ordem bonitinho, pra que a "soma" dê certo
     public enum EColor {
-        BLACK,
-        RED,
-        GREEN,
-        YELLOW,
-        BLUE,
-        PURPLE,
-        CYAN,
-        WHITE
+        BLACK = 0,
+        RED = 1,
+        GREEN = 2,
+        YELLOW = 3,
+        BLUE = 4,
+        PURPLE = 5,
+        CYAN = 6,
+        WHITE = 7
     }
 
     public EColor eColor;
@@ -47,15 +48,11 @@ public class Energy : MonoBehaviour {
     }
 
     public void JoinColor(Energy otherEnergy) {
-        this.SetColor(Sum(this.eColor, otherEnergy.eColor));
+        this.SetColor (Sum (this.eColor, otherEnergy.eColor));
     }
 
 	public static EColor Sum(EColor a, EColor b){
-        int result = (int)a + (int)b;
-        if (result > (int)EColor.WHITE){
-            result = (int)EColor.WHITE;
-        }
-        return (EColor)result;
+        return (EColor)((int) a | (int) b);
     }
 
     public static Color ToColor(EColor eC) {

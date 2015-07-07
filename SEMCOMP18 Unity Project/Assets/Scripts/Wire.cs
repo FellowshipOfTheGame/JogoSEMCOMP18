@@ -8,9 +8,8 @@ public class Wire : MonoBehaviour, IPointerClickHandler {
     public GameObject inNode = null;
     public GameObject outNode = null;
 
-    public Queue<GameObject> energyReferences = new Queue<GameObject>();
-    public Queue<float> energyTimers = new Queue<float>();
-    public Queue<int> energyBeat = new Queue<int>();
+	public GameObject energy;
+	public float timer;
 
     private TimingController timing;
 
@@ -19,42 +18,32 @@ public class Wire : MonoBehaviour, IPointerClickHandler {
     }
 
     void Update() {
-        float tempTimer;
-        GameObject tempEnergy;
+		if (energy != null) {
+			float bps = timing.bpm / 59f;
+			float transportDelay = 1 / bps;
 
-        float bps = timing.bpm / 60;
-        float transportDelay = 1 / bps;
-
-        int n = energyTimers.Count;
-
-        for(int i = 0; i < n; i++){
-            tempTimer = energyTimers.Dequeue() + Time.deltaTime;
-            tempEnergy = energyReferences.Dequeue();
-            if (tempTimer < transportDelay) {
-                tempEnergy.transform.position = Vector2.Lerp(inNode.transform.position, outNode.transform.position, tempTimer / transportDelay);
-                energyTimers.Enqueue(tempTimer);
-                energyReferences.Enqueue(tempEnergy);
-            }
-            else {
-                outNode.GetComponent<Node>().RecieveEnergy(tempEnergy);
-            }
-        }
+			timer += Time.deltaTime;
+			if (timer < transportDelay) {
+				energy.transform.position = Vector2.Lerp (inNode.transform.position, outNode.transform.position, timer / transportDelay);
+			}
+			else {
+				outNode.GetComponent<Node> ().RecieveEnergy (energy);
+				energy = null;
+			}
+		}
     }
 
     public void OnPointerClick(PointerEventData pointerEventData) {
         if(pointerEventData.button == PointerEventData.InputButton.Right){
             inNode.GetComponent<Node>().DeleteWire(gameObject);
             outNode.GetComponent<Node>().DeleteWire(gameObject);
-            while (energyReferences.Count > 0) {
-                Destroy(energyReferences.Dequeue());
-            }
-            Destroy(this.gameObject);
+			Destroy (energy);
+            Destroy (gameObject);
         }
     }
 
-    public void RecieveEnergy(GameObject energy, int beatCounter) {
-        energyReferences.Enqueue(energy);
-        energyTimers.Enqueue(0f);
-        energyBeat.Enqueue(beatCounter);
+    public void RecieveEnergy(GameObject energy) {
+		this.energy = energy;
+		this.timer = 0f;
     }
 }
