@@ -7,7 +7,7 @@ public class TimingController : MonoBehaviour {
 
     private float timer = 0;
 
-    public int beatCounter;
+    public int beatCounter = 0;
 
     private float delta = 0;
     private int beatsToRun = 0;

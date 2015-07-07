@@ -13,18 +13,19 @@ public class Pool<T> : IDisposable
     private bool isDisposed;
     private Func<T> factory;
     private Action<T> release;
+    private Action<T> acquire;
     private LoadingMode loadingMode;
     private IItemStore itemStore;
     private int size;
     private int count;
     private Semaphore sync;
 
-    public Pool(int size, Func<T> factory, Action<T> release)
-        : this(size, factory, release, LoadingMode.Lazy, AccessMode.FIFO)
+    public Pool(int size, Func<T> factory, Action<T> acquire, Action<T> release)
+        : this(size, factory, acquire, release, LoadingMode.Lazy, AccessMode.FIFO)
     {
     }
 
-    public Pool(int size, Func<T> factory, Action<T> release,
+    public Pool(int size, Func<T> factory, Action<T> acquire, Action<T> release,
         LoadingMode loadingMode, AccessMode accessMode)
     {
         if (size <= 0)
@@ -34,10 +35,13 @@ public class Pool<T> : IDisposable
             throw new ArgumentNullException("factory");
         if (release == null)
             throw new ArgumentNullException("release");
+        if (acquire == null)
+            throw new ArgumentNullException("acquire");
 
         this.size = size;
         this.factory = factory;
         this.release = release;
+        this.acquire = acquire;
 
         sync = new Semaphore(size, size);
         this.loadingMode = loadingMode;
@@ -51,17 +55,24 @@ public class Pool<T> : IDisposable
     public T Acquire()
     {
         sync.WaitOne();
+        T result;
         switch (loadingMode)
         {
             case LoadingMode.Eager:
-                return AcquireEager();
+                result = AcquireEager();
+                break;
             case LoadingMode.Lazy:
-                return AcquireLazy();
+                result = AcquireLazy();
+                break;
             default:
                 Debug.Assert(loadingMode == LoadingMode.LazyExpanding,
                     "Unknown LoadingMode encountered in Acquire method.");
-                return AcquireLazyExpanding();
+                result = AcquireLazyExpanding();
+                break;
         }
+        if (result != null)
+            acquire(result);
+        return result;
     }
 
     public void Release(T item)
