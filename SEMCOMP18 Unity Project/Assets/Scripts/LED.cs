@@ -14,14 +14,12 @@ public class LED : Node {
     }
     public override void RecieveEnergy(GameObject energy) {
         base.RecieveEnergy (energy);
-        if (energies.Count > 0) {
-            GameObject resultEnergy = Energy.JoinEnergies(energies);
-            Light(resultEnergy.GetComponent<Energy>().eColor);
-            if (notes != null && notes.Length > 0)
-            {
-                Pitch.Play(_source, notes[beat]);
-            }
+        Light(energy.GetComponent<Energy>().eColor);
+        if (notes != null && notes.Length > 0)
+        {
+            Pitch.Play(_source, notes[beat]);
         }
+     
     }
 
     public override void OnBeat(int beatCounter)

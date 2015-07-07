@@ -14,8 +14,7 @@ public class TimingController : MonoBehaviour {
 	// Use this for initialization
 	// Contador de Batidas
     public int beatCounter = 0;
-	
->>>>>>> origin/Visual
+
     void Update() {
 	}
 
