@@ -19,7 +19,7 @@ public class Wire : MonoBehaviour, IPointerClickHandler {
 
     void Update() {
 		if (energy != null) {
-			float bps = timing.bpm / 60f;
+			float bps = timing.bpm / 59f;
 			float transportDelay = 1 / bps;
 
 			timer += Time.deltaTime;
