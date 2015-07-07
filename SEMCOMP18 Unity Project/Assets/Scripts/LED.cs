@@ -5,11 +5,10 @@ public class LED : Node {
 
 
     public override void RecieveEnergy(GameObject energy) {
-        energies.Add(energy);
+        base.RecieveEnergy (energy);
 
-        if (energies.Count > 0) {
-            GameObject resultEnergy = Energy.JoinEnergies(energies);
-            Light(resultEnergy.GetComponent<Energy>().eColor);
+        if (energy != null) {
+            Light(energy.GetComponent<Energy> ().eColor);
         }
     }
 

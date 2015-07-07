@@ -1,31 +1,26 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 public class TimingController : MonoBehaviour {
 
     public int bpm = 120;
-
+	// Timer, que conta tempo entre batidas
     private float timer = 0;
-
+	// Contador de Batidas
     public int beatCounter;
-
-    private float delta = 0;
-    private int beatsToRun = 0;
-
-	// Use this for initialization
+	
     void Update() {
 	}
-	
-	// Update is called once per frame
+
     void LateUpdate() {
-        delta = Time.deltaTime;
-        timer += delta;
-        beatsToRun = (int)(timer * bpm / 60f);
-        timer = (timer * bpm / 60f) - (int)(timer * bpm / 60f);
+		timer += Time.deltaTime;
+		float beatsPassed = (timer * bpm / 60f);
+        int beatsToRun = (int)Math.Floor (beatsPassed);
         beatCounter += beatsToRun;
-        if(beatsToRun > 0){
-            FindObjectOfType<Grid>().Beat(beatCounter);
-            beatsToRun = 0;
+        if(beatsToRun > 0) {
+            FindObjectOfType<Grid>().Beat(beatsToRun);
+			timer -= beatsToRun * (60f / bpm);
         }
 	}
 }

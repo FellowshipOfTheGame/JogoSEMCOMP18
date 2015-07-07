@@ -48,7 +48,7 @@ public class Energy : MonoBehaviour {
     }
 
     public void JoinColor(Energy otherEnergy) {
-        this.SetColor(Sum(this.eColor, otherEnergy.eColor));
+        this.SetColor (Sum (this.eColor, otherEnergy.eColor));
     }
 
 	public static EColor Sum(EColor a, EColor b){
