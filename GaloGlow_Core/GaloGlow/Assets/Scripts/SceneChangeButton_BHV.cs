@@ -39,6 +39,29 @@ public class SceneChangeButton_BHV : MonoBehaviour {
 		IsActive = true;
 		GlowEquilibrium = MinGlow;
 
+		Ray ClickRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+		RaycastHit Hit;
+
+		if (Physics.Raycast(ClickRay, out Hit, 1000.0f) && Hit.collider.gameObject == gameObject){
+
+			MouseOver = true;
+			GlowEquilibrium = MaxGlow;
+			
+			GameObject newSound =  (GameObject)Instantiate (SoundEffect, transform.position, Quaternion.identity);
+			newSound.GetComponent <SoundEffect_BHV> ().SoundToPlay = HoverSound;
+			
+			if (UseGodPitch){
+				
+				newSound.GetComponent <SoundEffect_BHV> ().Pitch = LevelSelectGod.GetComponent <God_BHV> ().GetHoverPitch (Chord);
+				
+			}
+			else {
+				
+				newSound.GetComponent <SoundEffect_BHV> ().Pitch = Pitch;
+			}
+
+		}
+
 	}
 
 	// Use this for initialization

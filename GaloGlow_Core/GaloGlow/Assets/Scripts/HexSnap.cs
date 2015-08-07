@@ -26,7 +26,7 @@ public class HexSnap : MonoBehaviour {
 		float newX = (float)( (Math.Round((double)x / (double)w) *w) / (double)adj );
 		float newZ = (float)( (Math.Round((double)z / (double)h) *h) / (double)adj );
 
-		transform.localPosition = new Vector3 (newX, 0.0f, newZ);
+		transform.localPosition = new Vector3 (newX, transform.localPosition.y, newZ);
 	}
 
 }
