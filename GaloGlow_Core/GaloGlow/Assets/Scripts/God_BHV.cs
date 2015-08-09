@@ -183,7 +183,7 @@ public class God_BHV : MonoBehaviour
         Filter = ConvertColorSystem(Filter);
         FilterInput = ConvertColorSystem(FilterInput);
 
-        return DisconvertColorSystem((int)(~((uint)Filter & (uint)FilterInput)));
+		return DisconvertColorSystem((int)((~((uint)Filter)) & ((uint)FilterInput)));
 
 
     }

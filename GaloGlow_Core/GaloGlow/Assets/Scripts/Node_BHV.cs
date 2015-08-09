@@ -2,8 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Node_BHV : MonoBehaviour
-{
+public class Node_BHV : MonoBehaviour {
 
     public GameObject God;
     public GameObject Spark;
@@ -24,34 +23,28 @@ public class Node_BHV : MonoBehaviour
     private bool DragingDestroy = false;
     public int ExternalConnectionsCount = 0;
 
-    private void RefreshArt()
-    {
+    private void RefreshArt(){
 
-        if (NextNodes.Count > 0 || HasArrivingConnections() || DragingWire)
-        {
+        if (NextNodes.Count > 0 || HasArrivingConnections() || DragingWire){
 
             ConnectorArt.GetComponent<MeshRenderer>().enabled = true;
 
         }
-        else
-        {
+        else{
 
             ConnectorArt.GetComponent<MeshRenderer>().enabled = false;
 
         }
 
-        for (int i = 0; i < ConnectionArt.Length; i++)
-        {
+        for (int i = 0; i < ConnectionArt.Length; i++){
 
-            if (i < NextNodes.Count)
-            {
+            if (i < NextNodes.Count){
 
                 ConnectionArt[i].GetComponent<LineRenderer>().enabled = true;
                 ConnectionArt[i].GetComponent<LineRenderer>().SetPosition(0, transform.position);
                 ConnectionArt[i].GetComponent<LineRenderer>().SetPosition(1, NextNodes[i].transform.position);
             }
-            else
-            {
+            else{
 
                 ConnectionArt[i].GetComponent<LineRenderer>().enabled = false;
 
