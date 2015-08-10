@@ -274,6 +274,13 @@ public class God_BHV : MonoBehaviour
         FadingTime = FadeOutTime;
         print(FilterColor(0, 1));
 
+        //Acha o botão automaticamente
+        LevelConclusionButton = GameObject.Find("NextButton");
+
+        //Extende o periodo de verificação
+        CicleDuration *= 2;
+        CompletionScore *= 2;
+
     }
 
     // Update is called once per frame
