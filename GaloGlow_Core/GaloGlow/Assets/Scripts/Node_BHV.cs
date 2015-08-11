@@ -250,6 +250,12 @@ public class Node_BHV : MonoBehaviour {
 
     }
 
+	public void RemoveEntry (int ColorIndex){
+
+		ArrivingSparks.Remove (ColorIndex);
+
+	}
+
     public int GetColor()
     {
 

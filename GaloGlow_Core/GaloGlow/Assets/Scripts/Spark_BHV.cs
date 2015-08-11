@@ -43,7 +43,7 @@ public class Spark_BHV : MonoBehaviour {
 
 				if (jarodei){
 
-					LastPosition.GetComponent <Node_BHV> ().RemoveColor (SparkColor);
+					LastPosition.GetComponent <Node_BHV> ().RemoveEntry (SparkColor);
 				
 				}
 				Destroy(gameObject);

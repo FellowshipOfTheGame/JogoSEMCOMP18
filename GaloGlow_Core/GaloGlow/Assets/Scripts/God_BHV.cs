@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.Audio;
+using UnityEngine.UI;
 
 public class God_BHV : MonoBehaviour
 {
@@ -234,9 +235,12 @@ public class God_BHV : MonoBehaviour
     ///////////
 
     //Values
-    public AudioMixer MasterMixer;             //The audio mixer used in fade out.
+    public AudioMixer MasterMixer;            //The audio mixer used in fade out.
     public int[,] HoverSoundPitch;            //Matrix containing the chords. This is not set in the inspector, its set in start.
-    private int CurrentPitch = 0;              //The current note of the arpeggio.
+    private int CurrentPitch = 0;             //The current note of the arpeggio.
+	public AudioClip Metrognome1;
+	public AudioClip Metrognome2;
+	public GameObject SoundEffect;
 
     //Methodes
     public int GetHoverPitch(int Chord)
@@ -306,12 +310,28 @@ public class God_BHV : MonoBehaviour
                         TimeIndex = 0;
                         PulseCounter = (PulseCounter + 1) % CicleDuration;
 
-                        if (PulseCounter == 0)
-                        {
+                        if (PulseCounter == 0){
 
                             CanReset = true;
 
+							if (Metrognome1!= null){
+
+								GameObject NewSoundEffect = (GameObject) Instantiate (SoundEffect, Vector3.zero, Quaternion.identity);
+								NewSoundEffect.GetComponent <SoundEffect_BHV> ().SoundToPlay = Metrognome1;
+							
+							}
+
                         }
+						else {
+
+							if (Metrognome1!= null){
+
+								GameObject NewSoundEffect = (GameObject) Instantiate (SoundEffect, Vector3.zero, Quaternion.identity);
+								NewSoundEffect.GetComponent <SoundEffect_BHV> ().SoundToPlay = Metrognome2;
+							
+							}
+
+						}
 
                     }
 
@@ -337,6 +357,8 @@ public class God_BHV : MonoBehaviour
                 FadingTime = FadingTime + Time.deltaTime;
                 MasterMixer.SetFloat("MasterVolume", -80.0f * (1.0f - GetFadeFactor()));
                 FadePlane.GetComponent<MeshRenderer>().materials[0].SetFloat("_Darkness", GetFadeFactor());
+				//FadePlane.GetComponent <Image> ().material.SetFloat ("_Darkness", GetFadeFactor());
+				//FadePlane.GetComponent <Image> ().material.color = new Color (0.0f, 0.0f, 0.0f, 1.0f-GetFadeFactor());
 
             }
             else
@@ -358,6 +380,7 @@ public class God_BHV : MonoBehaviour
                 FadingTime = FadingTime - Time.deltaTime;
                 MasterMixer.SetFloat("MasterVolume", -80.0f * (1.0f - GetFadeFactor()));
                 FadePlane.GetComponent<MeshRenderer>().materials[0].SetFloat("_Darkness", GetFadeFactor());
+				//FadePlane.GetComponent <Image> ().material.color = new Color (0.0f, 0.0f, 0.0f, 1.0f-GetFadeFactor());
 
             }
             else
@@ -366,6 +389,8 @@ public class God_BHV : MonoBehaviour
                 FadingTime = 0.0f;
                 FadePlane.GetComponent<MeshRenderer>().materials[0].SetFloat("_Darkness", GetFadeFactor());
                 MasterMixer.SetFloat("MasterVolume", -80.0f * (1.0f - GetFadeFactor()));
+				//FadePlane.GetComponent <Image> ().material.SetFloat ("_Darkness", GetFadeFactor());
+				//FadePlane.GetComponent <Image> ().material.color = new Color (0.0f, 0.0f, 0.0f, 1.0f-GetFadeFactor());
 
             }
 

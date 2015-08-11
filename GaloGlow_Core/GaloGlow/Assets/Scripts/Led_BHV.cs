@@ -58,7 +58,7 @@ public class Led_BHV : MonoBehaviour {
 					//GetComponent <AudioSource> ().pitch = Mathf.Pow (1.05945454f, (float)SparkType);
 					//GetComponent <AudioSource> ().PlayOneShot (BrokenSound);
 					newSound.GetComponent <SoundEffect_BHV> ().SoundToPlay = BrokenSound;
-					newSound.GetComponent <SoundEffect_BHV> ().Pitch = 0;
+					newSound.GetComponent <SoundEffect_BHV> ().Pitch = Random.Range (-3, 3);
 
 				}
 
