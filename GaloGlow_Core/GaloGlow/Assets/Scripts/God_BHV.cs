@@ -31,7 +31,6 @@ public class God_BHV : MonoBehaviour
     {
 
         CurrentCompletion = 0;
-        print("reseted");
 
     }          //Sets the level completio score to 0.
     public void IncrementCompletionScore()
@@ -241,6 +240,9 @@ public class God_BHV : MonoBehaviour
 	public AudioClip Metrognome1;
 	public AudioClip Metrognome2;
 	public GameObject SoundEffect;
+	public float MetrognomeVolume = 1.0f;
+	public int Metrognome1Pitch = 0;
+	public int Metrognome2Pitch = 0;
 
     //Methodes
     public int GetHoverPitch(int Chord)
@@ -268,7 +270,7 @@ public class God_BHV : MonoBehaviour
     void Start()
     {
 
-        HoverSoundPitch = new int[,] { { -12, -9, -5, 0, 3, 7, 12, 15, 19, 24 }, { -13, -10, -5, -1, 2, 7, 11, 14, 19, 23 }, { -12, -7, -4, 0, 5, 8, 12, 17, 20, 24 } };
+		HoverSoundPitch = new int[,] { { -12, -9, -5, 0, 3, 7, 12, 15, 19, 24 }, { -13, -10, -5, -1, 2, 7, 11, 14, 19, 23 }, { -12, -7, -4, 0, 5, 8, 12, 17, 20, 24 }, { -10, -7, -3, 2, 5, 9, 14, 17, 21, 26 } };
         //print (HoverSoundPitch.GetLength(1));
         //print (HoverSoundPitch.GetLength (1));
         //print (HoverSoundPitch.GetLength (2));
@@ -279,11 +281,12 @@ public class God_BHV : MonoBehaviour
         print(FilterColor(0, 1));
 
         //Acha o botão automaticamente
-        LevelConclusionButton = GameObject.Find("NextButton");
-
+		if (LevelConclusionButton == null){
+        	LevelConclusionButton = GameObject.Find("NextButton");
+		}
         //Extende o periodo de verificação
-        CicleDuration *= 2;
-        CompletionScore *= 2;
+        //CicleDuration *= 2;
+        //CompletionScore *= 2;
 
     }
 
@@ -325,6 +328,8 @@ public class God_BHV : MonoBehaviour
 
 								GameObject NewSoundEffect = (GameObject) Instantiate (SoundEffect, Vector3.zero, Quaternion.identity);
 								NewSoundEffect.GetComponent <SoundEffect_BHV> ().SoundToPlay = Metrognome1;
+								NewSoundEffect.GetComponent <SoundEffect_BHV> ().Volume = MetrognomeVolume;
+								NewSoundEffect.GetComponent <SoundEffect_BHV> ().Pitch = Metrognome1Pitch;
 							
 							}
 
@@ -335,6 +340,8 @@ public class God_BHV : MonoBehaviour
 
 								GameObject NewSoundEffect = (GameObject) Instantiate (SoundEffect, Vector3.zero, Quaternion.identity);
 								NewSoundEffect.GetComponent <SoundEffect_BHV> ().SoundToPlay = Metrognome2;
+								NewSoundEffect.GetComponent <SoundEffect_BHV> ().Volume = MetrognomeVolume;
+								NewSoundEffect.GetComponent <SoundEffect_BHV> ().Pitch = Metrognome2Pitch;
 							
 							}
 
