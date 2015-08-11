@@ -72,6 +72,8 @@ public class SceneChangeButton_BHV : MonoBehaviour {
 		BasePhase = Random.Range (0.0f, 1.0f/BaseFrequency);
 		BaseFrequency = BaseFrequency+Random.Range (-0.5f ,0.5f);
 
+        LevelSelectGod = GameObject.Find("God");
+
 	}
 	
 	// Update is called once per frame
